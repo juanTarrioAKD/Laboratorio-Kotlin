@@ -19,30 +19,27 @@ public class EstrategiaCampera : EstrategiaDeGuerra {
             Punto(robot.fieldWidth - MARGEN, robot.fieldHeight - MARGEN)
         )
 
-        // 2\. Búsqueda de la esquina más cercana
-        var distanciaMinima = Double.MAX_VALUE
-
         val esquinaElegida = esquinas.minByOrNull { esquina ->
             hypot((esquina.x - robot.robotX).toDouble(),
                   (esquina.y - robot.robotY).toDouble())
         } ?: esquinas[0]
 
-        // 3\. Cálculo del ángulo hacia la esquina elegida
+        // 2\. Cálculo del ángulo hacia la esquina elegida
         val dx = (esquinaElegida.x - robot.robotX).toDouble()
         val dy = (esquinaElegida.y - robot.robotY).toDouble()
 
-        // Math.atan2 devuelve radianes -&gt; Math.toDegrees lo pasa a grados sexagesimales
+        // Math.atan2 devuelve radianes -> Math.toDegrees lo pasa a grados sexagesimales
         var angulo = Math.toDegrees(atan2(dx, dy)).toInt()
 
         // Ajuste al rango de 0 a 360 grados de Robocode
         if (angulo < 0) { angulo += 360 }
 
-        // 4\. Girar y trasladarse a la esquina
+        // 3\. Girar y trasladarse a la esquina
         robot.turnTo(angulo)
         val distanciaFinal = hypot(dx, dy).toInt()
         robot.ahead(distanciaFinal)
 
-        // 5\. Bucle de vigilancia en la esquina: gira el cañón 360° continuamente
+        // 4\. Bucle de vigilancia en la esquina: gira el cañón 360° continuamente
         while (true) { robot.turnGunRight(360) }
     }
 }

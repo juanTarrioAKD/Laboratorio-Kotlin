@@ -1,0 +1,58 @@
+ANÁLISIS: Migración del robot Tarrio de Java a Kotlin
+
+Se migraron el robot (Tarrio), la interfaz EstrategiaDeGuerra, la clase Punto
+y las dos estrategias (EstrategiaCampera y EstrategiaParedErratica),
+manteniendo el mismo funcionamiento que en Java.
+
+1. Expresividad del código
+- Punto pasó a ser una data class: en una sola línea Kotlin genera el
+  constructor, los getters, equals, hashCode y toString.
+- En EstrategiaCampera, las esquinas se crean con listOf(...) y la más cercana
+  se obtiene con minByOrNull { ... }. Eso reemplaza el recorrido con un for y
+  la variable auxiliar para guardar el mínimo que había en Java.
+- En EstrategiaParedErratica, "when" e "if" devuelven un valor, así que el
+  destino inicial y los extremos de la patrulla se asignan directamente, sin
+  declarar la variable antes y asignarla en cada rama.
+- La desestructuración permite obtener dos valores juntos:
+  val (extremo1, extremo2) = ...
+- EstrategiaDeGuerra es una interfaz con métodos por defecto (onScannedRobot,
+  onHitWall, etc.), y calcularPotencia se escribe en una sola línea con un if
+  que devuelve un valor.
+
+2. Simplicidad sintáctica
+- No se usan punto y coma.
+- Con val/var el compilador infiere los tipos y no hace falta escribirlos.
+- Las constantes se declaran con "const val" dentro de un companion object, en
+  lugar de "private static final".
+- Se usan propiedades (punto.x) en lugar de métodos (punto.x()).
+- Herencia e implementación se escriben igual, con ":" (class Tarrio :
+  JuniorRobot(), class EstrategiaCampera : EstrategiaDeGuerra), y "override" es
+  una palabra obligatoria en lugar de la anotación @Override.
+- Para los números aleatorios, Random.nextInt(PASO_MIN, PASO_MAX + 1) indica
+  el rango directamente, sin la cuenta que había que hacer en Java.
+
+3. Legibilidad y claridad
+- "val" deja claro qué valores no cambian y "var" cuáles sí.
+- El código queda más corto y con menos repeticiones, así que se entiende
+  rápido qué hace cada estrategia.
+- El "when" muestra cada caso por separado, más fácil de leer que una cadena
+  de if/else if.
+- Una desventaja: Kotlin no convierte solo Int a Double, así que hay que
+  escribir .toDouble() en varios lugares. Esto agrega algo de ruido, aunque
+  hace visibles conversiones que en Java pasaban sin notarse.
+
+4. Experiencia general de programación
+- La migración fue directa: Kotlin usa sin problemas las clases de Java
+  (robocode.JuniorRobot, Math.toDegrees, Math.round).
+- El compilador ayuda más: obliga a inicializar las variables y a convertir
+  los tipos de forma explícita, lo que evita errores.
+- La interfaz sellada (sealed interface) asegura que solo existan las
+  estrategias definidas en el proyecto.
+- Programar en Kotlin se sintió más cómodo y rápido. Hay que acostumbrarse a
+  algunas cosas nuevas (companion object, when, funciones como minByOrNull,
+  conversiones explícitas), pero se aprenden fácil viniendo de Java.
+
+Conclusión
+Las versiones en Java y en Kotlin hacen exactamente lo mismo, pero la de
+Kotlin es más corta, más expresiva y más fácil de leer. Su principal ventaja
+es que elimina código repetitivo sin perder claridad.
