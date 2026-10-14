@@ -7,7 +7,7 @@ import robocode.JuniorRobot
 
 
 class Tarrio : JuniorRobot(){
-    private val estrategia = EstrategiaCampera()
+    private val estrategia = EstrategiaParedErratica()
 
     override fun run (){
         setColors(orange,blue,white,yellow,black)
